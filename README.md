@@ -1,11 +1,11 @@
 <div align="center">
 
-# PyGoDevOps-guide
+# itegin — personal site
 
-**A self-hosted learning tracker for a Python → Go → DevOps study plan.**
-12 phases · 77 lessons · per-track progress · built and run on my own home server.
+**A self-hosted personal site: portfolio, GitHub showcase and a private learning section.**
+Flask · SQLite · no JS frameworks · hosted on a VPS behind nginx.
 
-🇷🇺 [Русская версия](README.ru.md) · [Live site](https://itgnroadmap.duckdns.org:9443/resume) · [Itegin](https://github.com/Itegin)
+🇷🇺 [Русская версия](README.ru.md) · [Live site](https://itgnroadmap.duckdns.org:9443/en?src=github) · [Itegin](https://github.com/Itegin) · [IT-Deck](https://github.com/Itegin/it-deck)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
@@ -21,40 +21,46 @@
 
 ### What this is
 
-A Flask site I built for myself to track progress through a personal "Python + Go → DevOps" study plan: 12 phases, 77 lessons, a checkbox per lesson, a progress bar per track. Each lesson is Markdown theory plus optional practice steps, verification steps and a self-check quiz. It's a real product I use daily, not a tutorial-follow-along — the codebase, auth, admin panel and CI are all mine.
+The personal site of Itegin Baltabaev, Linux & Monitoring Engineer — written and run by me, from the code to the server. It started as a progress tracker for my own study plan and grew into a small platform: a public résumé page (Russian and English), a projects page, and a private learning section with courses and progress tracking. It is a real product I use daily, not a tutorial follow-along.
 
-This repository is a **showcase only** — the source stays private (see [why](#why-the-source-is-private) below). It exists to describe the project and link to the live, working site.
+This repository is a **showcase only** — the source stays private (see [why](#why-the-source-is-private) below). It describes the project and links to the live site.
 
 ### Features
 
 | | |
 |---|---|
-| **Multi-user** | Hand-rolled auth (no flask-login), session-based, admin role |
-| **Guest mode** | One-click shared guest account to try the site without registering |
-| **Progress tracking** | Per-track progress bars, checkbox per lesson, notes per lesson |
-| **Lesson format** | Markdown theory + optional Practice / Verify steps + optional self-check quiz |
-| **Admin panel** | Draft → publish workflow for editable page sections, field-by-field text editing |
-| **Analytics** | Page-view counter with no cookies and no raw IPs (HMAC'd daily visitor hash) |
-| **Progressive enhancement** | Every checkbox is a real HTML form; JS just makes it faster |
+| **Public pages** | Résumé landing page (RU and EN) and a projects page; they send no cookies |
+| **GitHub showcase** | Repos tagged `portfolio` are pulled in by a systemd timer and a signed webhook; READMEs go through an allow-list sanitizer, images are cached locally |
+| **Project pages** | [IT-Deck](https://github.com/Itegin/it-deck) is presented section by section, built like a lesson: outline, reading ticks kept only in the browser |
+| **Private learning section** | Courses with Markdown lessons, per-track progress and notes |
+| **Access** | Hand-rolled auth (no flask-login), invite-only registration with single-use links stored only as hashes, admin role |
+| **Admin panel** | Draft → publish for page sections, Markdown lesson editor with version history |
+| **Analytics** | Page-view and referrer counter with no cookies and no raw IPs (HMAC'd daily visitor hash) |
+| **Security** | CSRF tokens on every state-changing request, security headers, Content-Security-Policy (report-only for now) |
+| **Smooth navigation** | No SPA: cross-document View Transitions and Speculation Rules (prerender) |
+| **Progressive enhancement** | Forms are real HTML forms; JS only makes them faster |
 
 ### Stack
 
-Flask 3.1 · stdlib `sqlite3` (no ORM) · Markdown · gunicorn in Docker · vanilla JS + hand-written CSS — no frontend framework, no bundler, no Tailwind.
+Flask 3 · Jinja · stdlib `sqlite3` (no ORM) · Markdown · gunicorn in Docker Compose · vanilla JS + hand-written CSS — no frontend framework, no bundler, no Tailwind.
 
-CI on every push: `ruff check`, `pytest`, Docker build.
+CI on every push (GitHub Actions): `ruff check`, `pytest`, Docker build.
 
 ### Architecture
 
 ```mermaid
 flowchart LR
-    U[Visitor's browser] -->|HTTPS, TLS| N[nginx]
-    N -->|reverse proxy| G[gunicorn]
+    U[Visitor's browser] -->|HTTPS| N[nginx on a VPS]
+    N -->|reverse proxy, localhost| G[gunicorn in Docker]
     G --> F[Flask app]
-    F --> DB[(SQLite, on a Docker volume)]
+    F --> DB[(SQLite, WAL mode, Docker volume)]
+    GH[GitHub] -->|signed webhook + timer sync| F
+    DB -->|daily consistent backup| H[Home server]
+    H -->|weekly copy| P[Owner's PC]
     CI[GitHub Actions] -->|ruff + pytest + docker build| F
 ```
 
-The container binds to localhost only; nginx terminates TLS and is the only thing exposed. The whole stack runs on a home server, reached from outside despite CGNAT via an SSH tunnel.
+nginx terminates TLS and is the only thing exposed; the container binds to localhost. The database is backed up daily on the VPS, copied to a home server (my test bench), and from there weekly to my own PC.
 
 ### Why the source is private
 
