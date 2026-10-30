@@ -10,6 +10,7 @@ Flask · SQLite · no JS frameworks · hosted on a VPS behind nginx.
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL_(Umami)-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat-square&logo=nginx&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
@@ -44,7 +45,7 @@ This repository is a **showcase only** — the source stays private (see [why](#
 
 ### Stack
 
-Flask 3 · Jinja · stdlib `sqlite3` (no ORM) · Markdown · gunicorn in Docker Compose · vanilla JS + hand-written CSS — no frontend framework, no bundler, no Tailwind.
+Flask 3 · Jinja · stdlib `sqlite3` (no ORM) · Markdown · gunicorn in Docker Compose · vanilla JS + hand-written CSS — no frontend framework, no bundler, no Tailwind. Analytics: self-hosted Umami on PostgreSQL, in its own Docker Compose.
 
 CI on every push (GitHub Actions): `ruff check`, `pytest`, Docker build.
 

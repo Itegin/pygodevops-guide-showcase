@@ -10,6 +10,7 @@ Flask · SQLite · без JS-фреймворков · VPS за nginx.
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL_(Umami)-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![nginx](https://img.shields.io/badge/nginx-009639?style=flat-square&logo=nginx&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
@@ -44,7 +45,7 @@ Flask · SQLite · без JS-фреймворков · VPS за nginx.
 
 ### Стек
 
-Flask 3 · Jinja · стандартный `sqlite3` (без ORM) · Markdown · gunicorn в Docker Compose · чистый JS + написанный вручную CSS — без фронтенд-фреймворка, без сборщика, без Tailwind.
+Flask 3 · Jinja · стандартный `sqlite3` (без ORM) · Markdown · gunicorn в Docker Compose · чистый JS + написанный вручную CSS — без фронтенд-фреймворка, без сборщика, без Tailwind. Аналитика: свой Umami на PostgreSQL, в отдельном Docker Compose.
 
 CI на каждый пуш (GitHub Actions): `ruff check`, `pytest`, сборка Docker-образа.
 
