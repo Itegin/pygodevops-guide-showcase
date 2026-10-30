@@ -5,7 +5,7 @@
 **Личный сайт на своём хостинге: визитка, витрина GitHub и закрытый раздел обучения.**
 Flask · SQLite · без JS-фреймворков · VPS за nginx.
 
-🇬🇧 [English version](README.md) · [Живой сайт](https://itgnroadmap.duckdns.org:9443/?src=github) · [Itegin](https://github.com/Itegin) · [IT-Deck](https://github.com/Itegin/it-deck)
+🇬🇧 [English version](README.md) · [Живой сайт](https://itegin.com/?src=github) · [Itegin](https://github.com/Itegin) · [IT-Deck](https://github.com/Itegin/it-deck)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
@@ -30,12 +30,14 @@ Flask · SQLite · без JS-фреймворков · VPS за nginx.
 | | |
 |---|---|
 | **Публичные страницы** | Визитка (RU и EN) и страница проектов; cookies не ставят |
-| **Витрина GitHub** | Репозитории с темой `portfolio` подтягиваются systemd-таймером и подписанным вебхуком; README проходит через санитайзер по белому списку, картинки кэшируются локально |
+| **Витрина GitHub** | Репозитории с темой `portfolio` подтягиваются ежедневным systemd-таймером, подписанным вебхуком или кнопкой «Синхронизировать с GitHub» в админке; README проходит через санитайзер по белому списку, картинки кэшируются локально |
 | **Страницы проектов** | [IT-Deck](https://github.com/Itegin/it-deck) подан по разделам и построен как урок: оглавление, отметки «прочитано» хранятся только в браузере |
 | **Закрытый раздел обучения** | Курсы с уроками в Markdown, прогресс по трекам и заметки |
 | **Доступ** | Своя аутентификация (без flask-login), регистрация только по приглашению (одноразовые ссылки, в базе только хеш), роль администратора |
 | **Админка** | Черновик → публикация для разделов страниц, редактор уроков в Markdown с историей версий |
 | **Аналитика** | Счётчик просмотров и источников без cookies и без хранения IP (HMAC-хеш посетителя за день) |
+| **Аналитика Umami** | Своя установка, без cookies; панель доступна только через SSH-туннель; данные хранятся 12 месяцев |
+| **Ключи IT-Deck** | Админка выдаёт ключи [IT-Deck](https://github.com/Itegin/it-deck), подписанные Ed25519; подписанный список отозванных лежит в `/keys/it-deck/revoked.json` |
 | **Безопасность** | CSRF-токены на каждый изменяющий запрос, заголовки безопасности, Content-Security-Policy (пока в режиме report-only) |
 | **Плавная навигация** | Без SPA: кросс-документные View Transitions и Speculation Rules (предзагрузка) |
 | **Progressive enhancement** | Формы — настоящие HTML-формы; JS только ускоряет |
@@ -54,9 +56,10 @@ flowchart LR
     N -->|reverse proxy, localhost| G[gunicorn в Docker]
     G --> F[Flask-приложение]
     F --> DB[(SQLite, режим WAL, Docker volume)]
-    GH[GitHub] -->|подписанный вебхук + синхронизация по таймеру| F
+    GH[GitHub] -->|подписанный вебхук + ежедневная синхронизация| F
     DB -->|ежедневный консистентный бэкап| H[Домашний сервер]
     H -->|раз в неделю копия| P[ПК владельца]
+    N -->|/u/| UM[Umami + PostgreSQL]
     CI[GitHub Actions] -->|ruff + pytest + docker build| F
 ```
 

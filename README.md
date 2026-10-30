@@ -5,7 +5,7 @@
 **A self-hosted personal site: portfolio, GitHub showcase and a private learning section.**
 Flask · SQLite · no JS frameworks · hosted on a VPS behind nginx.
 
-🇷🇺 [Русская версия](README.ru.md) · [Live site](https://itgnroadmap.duckdns.org:9443/en?src=github) · [Itegin](https://github.com/Itegin) · [IT-Deck](https://github.com/Itegin/it-deck)
+🇷🇺 [Русская версия](README.ru.md) · [Live site](https://itegin.com/en?src=github) · [Itegin](https://github.com/Itegin) · [IT-Deck](https://github.com/Itegin/it-deck)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
@@ -30,12 +30,14 @@ This repository is a **showcase only** — the source stays private (see [why](#
 | | |
 |---|---|
 | **Public pages** | Résumé landing page (RU and EN) and a projects page; they send no cookies |
-| **GitHub showcase** | Repos tagged `portfolio` are pulled in by a systemd timer and a signed webhook; READMEs go through an allow-list sanitizer, images are cached locally |
+| **GitHub showcase** | Repos tagged `portfolio` are pulled in by a daily systemd timer, a signed webhook or a sync button in the admin; READMEs go through an allow-list sanitizer, images are cached locally |
 | **Project pages** | [IT-Deck](https://github.com/Itegin/it-deck) is presented section by section, built like a lesson: outline, reading ticks kept only in the browser |
 | **Private learning section** | Courses with Markdown lessons, per-track progress and notes |
 | **Access** | Hand-rolled auth (no flask-login), invite-only registration with single-use links stored only as hashes, admin role |
 | **Admin panel** | Draft → publish for page sections, Markdown lesson editor with version history |
 | **Analytics** | Page-view and referrer counter with no cookies and no raw IPs (HMAC'd daily visitor hash) |
+| **Umami analytics** | Self-hosted, no cookies; the dashboard is reachable only through an SSH tunnel; 12-month retention |
+| **IT-Deck keys** | The admin issues Ed25519-signed keys for [IT-Deck](https://github.com/Itegin/it-deck); a signed revoked list is served at `/keys/it-deck/revoked.json` |
 | **Security** | CSRF tokens on every state-changing request, security headers, Content-Security-Policy (report-only for now) |
 | **Smooth navigation** | No SPA: cross-document View Transitions and Speculation Rules (prerender) |
 | **Progressive enhancement** | Forms are real HTML forms; JS only makes them faster |
@@ -54,9 +56,10 @@ flowchart LR
     N -->|reverse proxy, localhost| G[gunicorn in Docker]
     G --> F[Flask app]
     F --> DB[(SQLite, WAL mode, Docker volume)]
-    GH[GitHub] -->|signed webhook + timer sync| F
+    GH[GitHub] -->|signed webhook + daily sync| F
     DB -->|daily consistent backup| H[Home server]
     H -->|weekly copy| P[Owner's PC]
+    N -->|/u/| UM[Umami + PostgreSQL]
     CI[GitHub Actions] -->|ruff + pytest + docker build| F
 ```
 
